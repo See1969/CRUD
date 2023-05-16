@@ -1,0 +1,23 @@
+<h2>List of Customers</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Mobile</th>
+      <th scope="col">Location</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let customer of customers$ | async; let i = index">
+      <th scope="row">{{i + 1}}</th>
+      <td>{{customer.name}}</td>
+      <td>{{customer.email}}</td>
+      <td>{{customer.mobile}}</td>
+      <td>{{customer.location}}</td>
+    </tr>
+    <tr>
+  </tbody>
+</table>
