@@ -9,11 +9,9 @@ import { CustomerInterface } from '../shared/types/customer.interface';
   styleUrls: ['./customers-list.component.scss'],
 })
 export class CustomersListComponent implements OnInit {
-  customers$!: Observable<CustomerInterface[]>;
-
   constructor(public httpService: HttpService) {}
 
   ngOnInit(): void {
-    this.customers$ = this.httpService.getData();
+    this.httpService.getData();
   }
 }

@@ -33,8 +33,8 @@ export class HttpService {
     });
   }
   // Read => GET
-  getData(): Observable<CustomerInterface[]> {
-    return this.http
+  getData(): void {
+    this.http
       .get<ResponseCustomerInterface>(`${url}.json`, httpOptions)
       .pipe(
         map((res) => {
@@ -42,15 +42,13 @@ export class HttpService {
           Object.keys(res).forEach((key) => arr.push({ key, ...res[key] }));
           return arr;
         })
-      );
-    // .subscribe({
-    //   next: (res: ResponseCustomerInterface) => {
-    //     Object.keys(res).forEach((key) => {
-    //       this.customers.push({ key, ...res[key] });
-    //     });
-    //   },
-    //   error: (err) => console.log(err),
-    // });
+      )
+      .subscribe({
+        next: (res: CustomerInterface[]) => {
+          this.customers = res;
+        },
+        error: (err) => console.log(err),
+      });
   }
   // Update => PUT, PATCH
   updateData(): void {}
