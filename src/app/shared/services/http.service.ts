@@ -24,13 +24,17 @@ export class HttpService {
 
   //CRUD
   // Create => POST, PATCH(без id/но фактически ошибочное создание данных)
-  createData(): void {
-    this.http.post(`${url}.json`, DEFAULT_CUSTOMER, httpOptions).subscribe({
-      next: (res) => {
-        console.log(res);
-      },
-      error: (err) => console.log(err),
-    });
+  createData(data: any): void {
+    console.log(data);
+
+    return;
+
+    // this.http.post(`${url}.json`, DEFAULT_CUSTOMER, httpOptions).subscribe({
+    //   next: (res) => {
+    //     console.log(res);
+    //   },
+    //   error: (err) => console.log(err),
+    // });
   }
   // Read => GET
   getData(): void {
@@ -44,8 +48,8 @@ export class HttpService {
         })
       )
       .subscribe({
-        next: (res: CustomerInterface[]) => {
-          this.customers = res;
+        next: (customers: CustomerInterface[]) => {
+          this.customers = customers;
         },
         error: (err) => console.log(err),
       });
