@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { DEFAULT_CUSTOMER } from '../data/mock.data';
 import { CustomerInterface } from '../types/customer.interface';
+import { RequestCustomerInterfase } from '../types/request-customer.interface';
 import { ResponseCustomerInterface } from '../types/response-customer.interface';
 
 const url: string =
@@ -24,17 +25,15 @@ export class HttpService {
 
   //CRUD
   // Create => POST, PATCH(без id/но фактически ошибочное создание данных)
-  createData(data: any): void {
-    console.log(data);
-
-    return;
-
-    // this.http.post(`${url}.json`, DEFAULT_CUSTOMER, httpOptions).subscribe({
-    //   next: (res) => {
-    //     console.log(res);
-    //   },
-    //   error: (err) => console.log(err),
-    // });
+  createData(customer: CustomerInterface): void {
+    this.http
+      .post<RequestCustomerInterfase>(`${url}.json`, customer, httpOptions)
+      .subscribe({
+        next: (res: RequestCustomerInterfase) => {
+          this.customers.push({ ...{ key: res.name }, ...customer });
+        },
+        error: (err) => console.log(err),
+      });
   }
   // Read => GET
   getData(): void {

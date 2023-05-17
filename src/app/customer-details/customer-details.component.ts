@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DEFAULT_CUSTOMER } from '../shared/data/mock.data';
 import { HttpService } from '../shared/services/http.service';
 
 @Component({
@@ -30,5 +31,7 @@ export class CustomerDetailsComponent implements OnInit {
       mobile: [null, [Validators.required, Validators.minLength(8)]],
       location: [null, [Validators.required]],
     });
+
+    this.form.setValue(DEFAULT_CUSTOMER);
   }
 }
