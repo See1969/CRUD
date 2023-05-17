@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { DEFAULT_CUSTOMER } from '../data/mock.data';
 import { CustomerInterface } from '../types/customer.interface';
 import { RequestCustomerInterfase } from '../types/request-customer.interface';
@@ -25,16 +25,18 @@ export class HttpService {
 
   //CRUD
   // Create => POST, PATCH(без id/но фактически ошибочное создание данных)
-  createData(customer: CustomerInterface): void {
-    this.http
+  createData(
+    customer: CustomerInterface
+  ): Observable<RequestCustomerInterfase> {
+    return this.http
       .post<RequestCustomerInterfase>(`${url}.json`, customer, httpOptions)
-      .subscribe({
-        next: (res: RequestCustomerInterfase) => {
+      .pipe(
+        tap((res: RequestCustomerInterfase) => {
           this.customers.push({ ...{ key: res.name }, ...customer });
-        },
-        error: (err) => console.log(err),
-      });
+        })
+      );
   }
+
   // Read => GET
   getData(): void {
     this.http
@@ -54,7 +56,18 @@ export class HttpService {
       });
   }
   // Update => PUT, PATCH
-  updateData(): void {}
+  updateData(customer: CustomerInterface, i: number): Observable<any> {
+    const { key, ...data } = customer;
+    return this.http
+      .put(`${url}/${key}.json`, data, httpOptions)
+      .pipe(tap(() => (this.customers[i] = customer)));
+  }
+
   // Delete => DELETE
-  deleteData(): void {}
+  deleteData(customer: CustomerInterface): void {
+    this.http.delete(`${url}/${customer.key}.json`).subscribe({
+      next: () => this.customers.splice(this.customers.indexOf(customer), 1),
+      error: (err) => console.log(err),
+    });
+  }
 }

@@ -21,7 +21,9 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.httpService.createData(this.form.value);
+    this.httpService.createData(this.form.value).subscribe((_: any) => {
+      this.form.reset();
+    });
   }
 
   private initializeForm(): void {

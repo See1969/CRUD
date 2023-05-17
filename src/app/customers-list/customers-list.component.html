@@ -1,6 +1,39 @@
 <h2>List of Customers</h2>
 
 <table class="table">
+  <ng-container *ngTemplateOutlet="tableHeadBlock"></ng-container>
+  <tbody>
+    <tr *ngFor="let customer of httpService.customers; let i = index">
+      <th class="align-middle" scope="row">{{i + 1}}</th>
+      <ng-container
+        *ngTemplateOutlet="isEditPos === i ? thenBlock : elseBlock; context: {$implicit: customer}"></ng-container>
+
+      <ng-container *ngTemplateOutlet="customerControlsBlock; context: {customer, index: i}"></ng-container>
+    </tr>
+    <tr>
+  </tbody>
+</table>
+
+<ng-template #thenBlock let-customer>
+  <td class="align-middle">
+    <input type="text" #name class="form-control form-control-sm" [value]="customer.name"
+      (blur)="setValue('name', customer.name, name.value)">
+  </td>
+  <td class="align-middle">
+    <input type="text" #email class="form-control form-control-sm" [value]="customer.email"
+      (blur)="setValue('email', customer.email, email.value)">
+  </td>
+  <td class="align-middle">
+    <input type="text" #mobile class="form-control form-control-sm" [value]="customer.mobile"
+      (blur)="setValue('mobile', customer.mobile, mobile.value)">
+  </td>
+  <td class="align-middle">
+    <input type="text" #location class="form-control form-control-sm" [value]="customer.location"
+      (blur)="setValue('location', customer.location, location.value)">
+  </td>
+</ng-template>
+
+<ng-template #tableHeadBlock>
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -8,16 +41,31 @@
       <th scope="col">Email</th>
       <th scope="col">Mobile</th>
       <th scope="col">Location</th>
+      <th scope="col"></th>
     </tr>
   </thead>
-  <tbody>
-    <tr *ngFor="let customer of httpService.customers; let i = index">
-      <th scope="row">{{i + 1}}</th>
-      <td>{{customer.name}}</td>
-      <td>{{customer.email}}</td>
-      <td>{{customer.mobile}}</td>
-      <td>{{customer.location}}</td>
-    </tr>
-    <tr>
-  </tbody>
-</table>
+</ng-template>
+
+<ng-template #elseBlock let-customer>
+  <td>{{customer.name}}</td>
+  <td>{{customer.email}}</td>
+  <td>{{customer.mobile}}</td>
+  <td>{{customer.location}}</td>
+</ng-template>
+
+<ng-template #customerControlsBlock let-customer="customer" let-i="index">
+  <td class="controls">
+    <button type="button" *ngIf="isEditPos !== i" class="btn btn-info ms-2 btn-sm" (click)="editCustomer(i)">
+      <i class="fas fa-edit"></i>
+    </button>
+    <button type="button" *ngIf="isEditPos === i" class="btn btn-info ms-2 btn-sm" (click)="cancelEdit()">
+      <i class="fas fa-undo"></i>
+    </button>
+    <button type="button" *ngIf="isEditPos === i" class="btn btn-info ms-2 btn-sm" (click)="saveCustomer(customer, i)">
+      <i class="fas fa-save"></i>
+    </button>
+    <button type="button" *ngIf="isEditPos !== i" class="btn btn-info ms-2 btn-sm" (click)="deleteCustomer(customer)">
+      <i class="fas fa-trash"></i>
+    </button>
+  </td>
+</ng-template>
